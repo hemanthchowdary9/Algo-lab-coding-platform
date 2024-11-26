@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/challengesV3.css">
+    <link rel="stylesheet" href="/static/css/commons.css">
+    <title>Challenges Table</title>
+    <style>
+        .background-image {
+            position: absolute;
+            top: 5%;
+            left: 2%;
+            right: 0;
+            bottom: 0;
+            background-image: url('/static/images/algo-bg-1.png'); /* Replace with your image path */
+            background-size: cover; /* Cover the entire page */
+            filter: blur(8px); /* Adjust blur level as needed */
+            z-index: -1; /* Place behind other content */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-position: center center; /* Centers the image */
+        }
+
+        .content {
+            position: relative; /* To ensure it appears above the background */
+            color: #333; /* Text color */
+            text-align: center; /* Center text */
+            z-index: 1; /* Bring content above background */
+            padding: 20px;
+            margin: 20px; /* Space around the content */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for better contrast */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+            width: 50%;
+            margin-left: 25%;
+            margin-top: 20%;
+        }
+    </style>
+</head>
+<body>
+
+
+<!--<div class="tabs">-->
+<!--    <div class="tab" style="font-size: xx-large;font-family: 'Arial Rounded MT Bold'">AlgoLab</div>-->
+<!--    <div class="tab"  onclick="ShowExplore()" style="margin-top: 10px">Explore</div>-->
+<!--    <div class="tab active" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>-->
+<!--    <div class="tab" onclick="ShowSubmissions()" style="margin-top: 10px">Submissions</div>-->
+<!--    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Contact</div>-->
+<!--    <div class="user-icon">-->
+<!--        <span style="color: #dddddd">{{.Username}}</span>-->
+<!--        <div class="dropdown">-->
+<!--            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">-->
+<!--            <div class="dropdown-content" id="dropdownContent">-->
+<!--                <a href="/logout">Logout</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<div class="tabs">
+    <img src="/static/images/algo-logo-1.png" alt="Premium User" style="width: 75px;">
+    <div class="tab" style="font-size: xx-large; font-family: 'Arial Rounded MT Bold',serif; margin-left: -30px;">AlgoLab</div>
+    <div class="tab" onclick="ShowExplore()"  style="margin-top: 10px">Explore</div>
+    <div class="tab active" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>
+    <div class="tab" onclick="ShowSubmissions()" style="margin-top: 10px">Submissions</div>
+    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Contact</div>
+    {{ if not (isPremium .Username) }}
+    <div class="tab" onclick="PurchasePremium()" style="margin-top: 10px; color: goldenrod; font-weight: bolder">Premium</div>
+    {{ end }}
+    <div class="user-icon">
+        <!-- Conditionally display the fire icon if PREMIUM -->
+        {{ if isPremium .Username }}
+        <div class="tooltip">
+            <img src="/static/images/fire.png" alt="Premium User" style="width: 35px; height: 20px; margin-left: 5px;">
+            <div class="tooltiptext">Premium</div>
+        </div>
+        {{ end }}
+        <span style="color: #dddddd">{{ .Username | getFirstName }}</span>
+
+        <div class="dropdown">
+            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{ if (eq (len .Challenges) 0) }}
+<!-- Background image div -->
+<div class="background-image"></div>
+
+<!-- Content div that is not affected by blur -->
+<div class="content">
+    <p>Executing Soon...!   😉  </p>
+</div>
+{{ else }}
+<div class="header">
+    <h1 style="margin-left: 36%">{{.HeaderTitle}}</h1>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Difficulty</th>
+        <th>Let's GO</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Challenges}}
+    <tr>
+        <td class="challenge-title">{{ .Title }}</td>
+        <td>{{ .Difficulty }}</td>
+        <td>
+            {{if .Premium}}
+            <button class="button" disabled style="background: goldenrod">🔒 Premium</button>
+            {{else}}
+            <button class="button" onclick="startChallenge({{ .ID }})">Start Challenge</button>
+            {{end}}
+        </td>
+    </tr>
+    {{end}}
+
+    </tbody>
+</table>
+{{end}}
+<script src="/static/js/commons.js"></script> <!-- Link to your JS file -->
+
+<script>
+    // function toggleDropdown() {
+    //     document.getElementById("dropdownContent").classList.toggle("show");
+    // }
+
+    // Close the dropdown if the user clicks outside of it
+    // window.onclick = function(event) {
+    //     if (!event.target.matches('.user-icon img')) {
+    //         var dropdowns = document.getElementsByClassName("dropdown-content");
+    //         for (var i = 0; i < dropdowns.length; i++) {
+    //             var openDropdown = dropdowns[i];
+    //             if (openDropdown.classList.contains('show')) {
+    //                 openDropdown.classList.remove('show');
+    //             }
+    //         }
+    //     }
+    // }
+    // function ShowChallenges() {
+    //     // Logic to show challenges can be added later
+    //     console.log("Showing Challenges");
+    // }
+    //
+    // function ShowExplore() {
+    //     // Logic to show challenges can be added later
+    //     window.location.href = '/dashboard'
+    // }
+
+    function startChallenge(id) {
+        window.location.href = "/challenge/description?id=" + id;
+    }
+</script>
+</body>
+</html>

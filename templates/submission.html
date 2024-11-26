@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submissions - User Page</title>
+    <link rel="stylesheet" href="/static/css/commons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .user-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .submission-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submission-card:hover {
+            transform: scale(1.02);
+        }
+
+        .problem-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0077cc;
+            margin: 0;
+        }
+
+        .difficulty {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .submission-details {
+            display: none;
+            padding-top: 10px;
+        }
+
+        .code-editor {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            overflow: auto;
+            margin-top: 10px;
+        }
+
+        .output-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .output {
+            width: 48%;
+        }
+
+        .output-label {
+            font-weight: bold;
+            color: #444;
+        }
+
+        .output-value {
+            color: #555;
+        }
+
+
+        .difficulty-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .difficulty-easy {
+            background-color: #28a745; /* Green */
+        }
+
+        .difficulty-medium {
+            background-color: #ffc107; /* Orange */
+        }
+
+        .difficulty-hard {
+            background-color: #dc3545; /* Red */
+        }
+
+        .no-submissions-card {
+            border: 1px solid #ccc; /* Light border */
+            padding: 20px;
+            text-align: center; /* Center the text */
+            background-color: white; /* Light background */
+            border-radius: 8px; /* Rounded corners */
+            margin: 20px; /* Space around the card */
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <img src="/static/images/algo-logo-1.png" alt="Premium User" style="width: 75px;">
+    <div class="tab" style="font-size: xx-large; font-family: 'Arial Rounded MT Bold',serif; margin-left: -30px;">AlgoLab</div>
+    <div class="tab" onclick="ShowExplore()"  style="margin-top: 10px">Explore</div>
+    <div class="tab" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>
+    <div class="tab active" onclick="ShowSubmissions()" style="margin-top: 10px">Submissions</div>
+    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Contact</div>
+    {{ if not (isPremium .Username) }}
+    <div class="tab" onclick="PurchasePremium()" style="margin-top: 10px; color: goldenrod; font-weight: bolder">Premium</div>
+    {{ end }}
+    <div class="user-icon">
+        <!-- Conditionally display the fire icon if PREMIUM -->
+        {{ if isPremium .Username }}
+        <div class="tooltip">
+            <img src="/static/images/fire.png" alt="Premium User" style="width: 35px; height: 20px; margin-left: 5px;">
+            <div class="tooltiptext">Premium</div>
+        </div>
+        {{ end }}
+        <span style="color: #dddddd">{{ .Username | getFirstName }}</span>
+
+        <div class="dropdown">
+            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    {{ if eq (len .Submissions) 0 }}
+    <div class="no-submissions-card">
+        <img src="/static/images/ghost.png" alt="No Submissions" style="width: 100px; height: 100px;">
+        <p>No submissions yet.</p>
+    </div>
+    {{ else }}
+        <!-- Submission Card -->
+        {{range .Submissions}}
+        <div class="submission-card" onclick="toggleDetails(this)">
+            <div class="problem-title">{{ .ProblemTitle }}</div>
+            <p><strong>Language:</strong> {{ .Language }}</p>
+            <p><strong>Attempts:</strong> {{ .Attempts }}</p>
+            <div class="section-title" style="margin-left: 60%; margin-top: -5%"><strong>Status:</strong>
+                <span class="difficulty-tag {{if eq .Status "Passed"}}difficulty-easy{{else if eq .Status "Partial"}}difficulty-medium{{else if eq .Status "Failed"}}difficulty-hard{{end}}"> {{.Status}} </span>
+            </div>
+            <div class="submission-details">
+                <div class="code-editor">
+                    <pre><code>{{ .Code }}</code></pre>
+                </div>
+                <div class="output-section">
+                    <div class="output">
+                        <div class="output-label">Run Time:</div>
+                        <div class="output-value">{{ .RunTime }}</div>
+                    </div>
+                    <div class="output">
+                        <div class="output-label">Executed Time:</div>
+                        <div class="output-value">{{ .Time }}</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        <!-- Repeat above submission-card for each submission in list -->
+    {{ end }}
+</div>
+
+<script>
+    function toggleDetails(card) {
+        const details = card.querySelector('.submission-details');
+        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+<script src="/static/js/commons.js"></script> <!-- Link to your JS file -->
+
+</body>
+</html>

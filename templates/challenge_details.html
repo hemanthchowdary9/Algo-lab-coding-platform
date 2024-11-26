@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/challenge_detail.css">
+  <title>Challenge Description & Code Editor</title>
+</head>
+<body>
+
+<!-- Left Panel: Challenge Description -->
+<div class="description-panel">
+  <h1>{{.Title}} {{.Difficulty}}</h1>
+  <p>{{.Description}}</p>
+
+  <div class="section-title">Difficulty:
+    <span class="difficulty-tag {{if eq .Difficulty "Easy"}}difficulty-easy{{else if eq .Difficulty "Medium"}}difficulty-medium{{else if eq .Difficulty "Hard"}}difficulty-hard{{end}}">
+    {{.Difficulty}}
+    </span>
+  </div>
+
+
+  <div class="section-title">Examples:</div>
+  <div class="examples">
+    {{range .Examples}}
+    <div class="example">
+      <div class="example-title">Input:</div>
+      <pre class="example-code">{{.Input}}</pre>
+      <div class="example-title">Output:</div>
+      <pre class="example-code">{{.Output}}</pre>
+      <div class="example-title">Explanation:</div>
+      <div class="example-desc">{{.Explanation}}</div>
+    </div>
+    {{end}}
+  </div>
+</div>
+
+<!-- Right Panel: Code Editor -->
+<div class="editor-panel">
+  <!-- Language Selector -->
+  <div class="language-select">
+    <label for="language">Language: </label>
+    <select id="language">
+      <option value="java">Java</option>
+      <option value="go">Go</option>
+      <option value="js">JavaScript</option>
+    </select>
+  </div>
+
+  <!-- Code Editor -->
+  <textarea id="code-editor">
+/* Write your code here */
+        </textarea>
+  <input type="hidden" id="challenge-id" value="{{.Id}}">
+  <button id="submit-button">Submit</button>
+
+</div>
+
+<script>
+  document.getElementById('submit-button').addEventListener('click', function() {
+
+    console.log("inside submit button")
+    // Get the selected language
+    const language = document.getElementById('language').value;
+    const code = document.getElementById('code-editor').value;
+    const challengeID = document.getElementById('challenge-id').value;
+
+    // Create the payload
+    const payload = {
+      language: language,
+      code: code,
+      challengeId: challengeID
+    };
+
+    console.log("payload is ", payload)
+    // Send a POST request to the /compile API
+    fetch('/compile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+            .then(response => response.json())
+            .then(data => {
+              // Handle the response from the API
+              console.log('Success:', data);
+              // You can display the result to the user or handle errors
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Coding Challenges</title>
+    <link rel="stylesheet" href="/static/css/challenges.css">
+</head>
+<body>
+<div class="header">
+    <div class="user-info">
+        <img src="/static/images/user-icon.png" alt="User Icon" class="user-icon">
+        <span class="username">{{.Username}}</span>
+    </div>
+</div>
+<div class="challenge-container">
+    <h1>Today's Coding Challenges</h1>
+    <ul>
+        {{range .Challenges}}
+        <li>{{.}}</li>
+        {{end}}
+    </ul>
+</div>
+</body>
+</html>

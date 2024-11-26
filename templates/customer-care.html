@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Care Contacts</title>
+    <link rel="stylesheet" href="/static/css/customer-care.css">
+    <link rel="stylesheet" href="/static/css/commons.css">
+</head>
+<body>
+
+
+<div class="tabs">
+    <img src="/static/images/algo-logo-1.png" alt="Premium User" style="width: 75px;">
+    <div class="tab" style="font-size: xx-large; font-family: 'Arial Rounded MT Bold',serif; margin-left: -30px;">AlgoLab</div>
+    <div class="tab" onclick="ShowExplore()"  style="margin-top: 10px">Explore</div>
+    <div class="tab" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>
+    <div class="tab" onclick="ShowSubmissions()" style="margin-top: 10px">Submissions</div>
+    <div class="tab active" onclick="ShowContact()" style="margin-top: 10px">Contact</div>
+    {{ if not (isPremium .Username) }}
+    <div class="tab" onclick="PurchasePremium()" style="margin-top: 10px; color: goldenrod; font-weight: bolder">Premium</div>
+    {{ end }}
+    <div class="user-icon">
+        <!-- Conditionally display the fire icon if PREMIUM -->
+        {{ if isPremium .Username }}
+        <div class="tooltip">
+            <img src="/static/images/fire.png" alt="Premium User" style="width: 35px; height: 20px; margin-left: 5px;">
+            <div class="tooltiptext">Premium</div>
+        </div>
+        {{ end }}
+        <span style="color: #dddddd">{{ .Username | getFirstName }}</span>
+
+        <div class="dropdown">
+            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header class="header" style="margin-top: 5%">
+    <h1>Customer Care Contacts</h1>
+    <p>We’re here to help you 24/7. Choose the best way to reach out to us!</p>
+</header>
+
+<main class="contact-options">
+    <section class="contact-card">
+        <h2>📞 Phone Support</h2>
+        <p>Available: 24/7</p>
+        <p><strong>+1-800-555-0199</strong></p>
+    </section>
+
+    <section class="contact-card">
+        <h2>✉️ Email Support</h2>
+        <p>Available: 24/7</p>
+        <p><a href="mailto:algolab@example.com">support@example.com</a></p>
+    </section>
+
+    <section class="contact-card">
+        <h2>💬 Live Chat</h2>
+        <p>Available: 8 AM - 10 PM</p>
+        <button onclick="openChat()">Start Chat</button>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Need more help? Visit our <a href="/faq">FAQ page</a> or <a href="/support">support center</a>.</p>
+</footer>
+
+<script src="/static/js/commons.js"></script> <!-- Link to your JS file -->
+<script>
+    function openChat() {
+        alert("Live chat feature coming soon!");
+    }
+</script>
+</body>
+</html>

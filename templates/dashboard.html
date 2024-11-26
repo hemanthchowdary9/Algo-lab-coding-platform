@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/commons.css">
+    <title>Challenges</title>
+</head>
+<body>
+
+<div class="tabs">
+    <img src="/static/images/algo-logo-1.png" alt="Premium User" style="width: 75px;">
+    <div class="tab" style="font-size: xx-large; font-family: 'Arial Rounded MT Bold',serif; margin-left: -30px;">AlgoLab</div>
+    <div class="tab active"  style="margin-top: 10px">Explore</div>
+    <div class="tab" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>
+    <div class="tab" onclick="ShowSubmissions()" style="margin-top: 10px">Submissions</div>
+    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Contact</div>
+    {{ if not (isPremium .Username) }}
+    <div class="tab" onclick="PurchasePremium()" style="margin-top: 10px; color: goldenrod; font-weight: bolder">Premium</div>
+    {{ end }}
+    <div class="user-icon">
+        <!-- Conditionally display the fire icon if PREMIUM -->
+        {{ if isPremium .Username }}
+        <div class="tooltip">
+            <img src="/static/images/fire.png" alt="Premium User" style="width: 35px; height: 20px; margin-left: 5px;">
+            <div class="tooltiptext">Premium</div>
+        </div>
+        {{ end }}
+        <span style="color: #dddddd">{{ .Username | getFirstName }}</span>
+
+        <div class="dropdown">
+            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Large Rectangle Card Container -->
+<div class="large-card-container">
+    <div class="large-card">
+        <h2>Code Quest of the Day</h2>
+        <p style="font-size: x-large">Your Daily Dose of Code: Take on the Challenge!</p>
+        <button class="btn" id="startChallenge">Start Challenge</button>
+    </div>
+</div>
+
+<!-- Small Rectangle Cards Container -->
+<div class="small-card-container">
+    <h2 style="color: whitesmoke; padding: 2px; font-family: 'Arial Hebrew Scholar',ui-serif">Study Plan</h2>
+    <div class="card-grid" style="margin-top: 20px">
+        <!-- Example of small cards -->
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="java">
+            <h3>Java</h3>
+            <p>Object-oriented programming excellence.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="go">
+            <h3>Go</h3>
+            <p>Concurrency and simplicity.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="dsa">
+            <h3>DSA </h3>
+            <p>Master Data Structures and Algorithms.</p>
+        </div>
+
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="top_picks">
+            <h3>Top Picks</h3>
+            <p>Curated coding excellence.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, white, lightgreen);" data-id="interview_ready">
+            <h3>Interview Ready</h3>
+            <p>Essential problem-solving skills.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="advanced">
+            <h3>Advanced</h3>
+            <p>Complex algorithms mastery.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="master_syntax">
+            <h3>Master Syntax</h3>
+            <p>Excel with syntaxing.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="js">
+            <h3>JS</h3>
+            <p>Dynamic web interactions.</p>
+        </div>
+        <div class="small-card" style="background: linear-gradient(to right, lightgreen, white);" data-id="unt_special">
+            <h3>UNT Specials</h3>
+            <p>Curated list of challenges by UNT.</p>
+        </div>
+
+    </div>
+</div>
+<script src="/static/js/commons.js"></script> <!-- Link to your JS file -->
+
+<script>
+    function toggleDropdown() {
+        document.getElementById("dropdownContent").classList.toggle("show");
+    }
+
+    // function ShowChallenges() {
+    //     window.location.href = '/challenges'
+    // }
+    //
+    // function ShowContact() {
+    //     console.log("Contact tab clicked");
+    // }
+    document.getElementById("startChallenge").addEventListener("click", function() {
+        // window.location.href = '/challenges'
+        const today = new Date();
+        const formattedDate = today.getFullYear() + '-' +
+            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+            String(today.getDate()).padStart(2, '0');
+        window.location.href = "/challenges?id=" + formattedDate;
+    });
+
+
+    const cards = document.querySelectorAll('.small-card');
+
+    // Add click event listener to each card
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Get the value from the h3 or data-id attribute
+            const id = card.getAttribute('data-id');
+
+            // Redirect to /challenges with the selected id
+            window.location.href = `/challenges?id=${encodeURIComponent(id)}`;
+        });
+    });
+
+</script>
+</body>
+</html>

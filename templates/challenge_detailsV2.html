@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/challenge_detail.css">
+    <link rel="stylesheet" href="/static/css/commons.css">
+    <style>
+        .test-case-results {
+            margin-top: 20px;
+        }
+
+        .result-card {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, darkslategrey, black);
+        }
+
+        .result-card.success summary {
+            color: #4caf50;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .result-card.error summary {
+            color: #f44336;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .status.success {
+            color: #4caf50;
+        }
+
+        .status.error {
+            color: #f44336;
+        }
+
+        details div {
+            margin-top: 8px;
+        }
+
+
+        .collapse-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .collapse-button:hover {
+            background-color: darkred;
+        }
+
+
+    </style>
+    <title>Challenge Description & Code Editor</title>
+
+</head>
+<body>
+<!-- Left Panel: Challenge Description -->
+{{if eq .Title ""}}
+    <div class="content">
+        <p>Only for premium Users</p>
+    </div>
+{{ else }}
+    <div class="description-panel">
+        <h1>{{.Title}} {{.Difficulty}}</h1>
+        <p>{{.Description}}</p>
+
+        <div class="section-title">Difficulty:
+            <span class="difficulty-tag {{if eq .Difficulty "Easy"}}difficulty-easy{{else if eq .Difficulty "Medium"}}difficulty-medium{{else if eq .Difficulty "Hard"}}difficulty-hard{{end}}">
+            {{.Difficulty}}
+            </span>
+        </div>
+
+
+        <div class="section-title">Examples:</div>
+        <div class="examples">
+            {{range .Examples}}
+            <div class="example">
+                <div class="example-title">Input:</div>
+                <pre class="example-code">{{.Input}}</pre>
+                <div class="example-title">Output:</div>
+                <pre class="example-code">{{.Output}}</pre>
+                <div class="example-title">Explanation:</div>
+                <div class="example-desc">{{.Explanation}}</div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+    <!-- Right Panel: Code Editor -->
+    <div class="editor-panel">
+        <!-- Language Selector -->
+        <div class="language-select">
+            <label for="language">Language: </label>
+            <select id="language">
+                <option value="java">Java</option>
+                <option value="python3">Python</option>
+                <option value="c">C</option>
+                <option value="go">GO</option>
+            </select>
+        </div>
+
+        <!-- Code Editor -->
+        <textarea id="code-editor">
+                /* Write your code here */
+        </textarea>
+        <input type="hidden" id="challenge-id" value="{{.Id}}">
+        <button id="submit-button" style="background: #4CAF50; width: 25%; height: 5%; align-self: center">Execute</button>
+        <!-- Test Case Results Section -->
+        <button id="collapse-button-id" class="collapse-button" style="display: none; width: 10%; margin-left: auto; align-content: center">X</button>
+        <div id="test-case-results" class="test-case-results">
+            <!-- Results will be inserted here dynamically -->
+        </div>
+        <div id="loading-spinner" style="display: none; text-align: center;">
+            <img src="/static/images/siri.gif" alt="Loading..." style="width: 50px; height: 50px;">
+        </div>
+    </div>
+{{ end }}
+<script>
+
+    //    document.getElementById('collapse-button').addEventListener('click', function() {
+    //        // Find all details elements and close them
+    //        document.querySelectorAll('#test-case-results details').forEach(details => {
+    //            details.removeAttribute('open'); // Collapse the details
+    //        });
+    //    });
+
+    // Existing code for handling the submit button and displaying results...
+
+    document.getElementById('submit-button').addEventListener('click', function() {
+        document.getElementById("loading-spinner").style.display = "block";
+
+        const language = document.getElementById('language').value;
+        const code = document.getElementById('code-editor').value;
+        const challengeID = document.getElementById('challenge-id').value;
+
+        const payload = {
+            language: language,
+            code: code,
+            challengeId: challengeID
+        };
+
+        fetch('/compile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => DisplayTestCaseResults(data))
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+<script src="/static/js/code_execution.js"></script> <!-- Link to your JS file -->
+<script src="/static/js/commons.js"></script> <!-- Link to your JS file -->
+
+</body>
+</html>

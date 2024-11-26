@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Factor Authentication</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .otp-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .otp-instructions {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="otp-container">
+  <h2>Two-Factor Authentication</h2>
+  <p class="otp-instructions">Please enter the OTP sent to your email or phone.</p>
+  <form action="/verify-otp" method="POST">
+    <label for="otp">Enter OTP:</label>
+    <input type="text" id="otp" name="otp" required placeholder="6-digit code">
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+</body>
+</html>

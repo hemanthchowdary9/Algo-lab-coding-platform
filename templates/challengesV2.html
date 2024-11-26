@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/challengesV2.css">
+    <title>Challenges</title>
+</head>
+<body>
+
+<div class="tabs">
+    <div class="tab" style="font-size: xx-large;font-family: 'Arial Rounded MT Bold'">Problem Solver</div>
+    <div class="tab"  onclick="ShowExplore()" style="margin-top: 10px">Explore</div>
+    <div class="tab active" onclick="ShowChallenges()" style="margin-top: 10px">Challenges</div>
+    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Submissions</div>
+    <div class="tab" onclick="ShowContact()" style="margin-top: 10px">Contact</div>
+    <div class="user-icon">
+        <span style="color: #dddddd">{{.Username}}</span>
+        <div class="dropdown">
+            <img src="/static/images/user-icon.png" alt="User Icon" onclick="toggleDropdown()">
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="header">
+    <h1 style="margin-left: 28%">{{.HeaderTitle}}</h1>
+</div>
+<div class="challenges-list">
+    {{range .Challenges}}
+    <div class="challenge-item" onclick="startChallenge({{.ID}})">{{.Title}}</div>
+    {{end}}
+</div>
+<script>
+    function toggleDropdown() {
+        document.getElementById("dropdownContent").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.user-icon img')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+    function ShowChallenges() {
+        // Logic to show challenges can be added later
+        console.log("Showing Challenges");
+    }
+
+    function ShowExplore() {
+        // Logic to show challenges can be added later
+        window.location.href = '/dashboard'
+    }
+
+    function ShowContact() {
+        // Logic to handle contact can be added later
+        console.log("Contact tab clicked");
+    }
+    function startChallenge(id) {
+        window.location.href = "/challenge/description?id=" + id;
+    }
+</script>
+</body>
+</html>

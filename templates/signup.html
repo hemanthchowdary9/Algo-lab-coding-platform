@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Coding Platform</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="form-box">
+        <h2>Register to AlgoLab Coding Platform</h2>
+        <form action="/signup" method="post" onsubmit="return validatePassword()">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <p style="color: red; font-weight: bold; margin-bottom: 2px">{{.}}</p>
+            <div class="input-group">
+                <button type="submit" class="btn">Register</button>
+            </div>
+            <p style="color:white;">Already have an Account ? <a href="/" style="margin-top: 1%;color: green">SignIn</a></p>
+        </form>
+    </div>
+</div>
+<script>
+    // Function to validate passwords
+    function validatePassword() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm_password").value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>
+</body>
+</html>

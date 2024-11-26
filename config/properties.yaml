@@ -1,0 +1,7 @@
+database:
+  - name: coding-platform
+#  - host:  host.docker.internal # for docker
+  - host: localhost
+  - port: 5432
+  - user: postgres
+  - password: 1234
